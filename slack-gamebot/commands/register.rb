@@ -1,16 +1,28 @@
 module SlackGamebot
   module Commands
     class Register < SlackRubyBot::Commands::Base
-      def self.call(client, data, _match)
+      def self.call(client, data, match)
+        expression = match['expression'] if match['expression']
+        p expression
+        arguments = expression.split.reject(&:blank?) if expression
+
+        if expression.nil? || arguments.empty?
+          message = "Please tell me who to register"
+          client.say(channel: data.channel, text: message)
+          return
+        end
+
+        username = arguments.first
+
         ts = Time.now.utc
-        user = ::User.find_create_or_update_by_slack_id!(client, data.user)
+        user = ::User.find_create_or_update_by_slack_id!(client, username)
         user.register! if user && !user.registered?
         message = if user.created_at >= ts
-                    "Welcome <@#{data.user}>! You're ready to play."
+                    "Welcome <@#{username}>! You're ready to play."
                   elsif user.updated_at >= ts
-                    "Welcome back <@#{data.user}>, I've updated your registration."
+                    "Welcome back <@#{username}>, I've updated your registration."
                   else
-                    "Welcome back <@#{data.user}>, you're already registered."
+                    "Welcome back <@#{username}>, you're already registered."
         end
         message += " You're also team captain." if user.captain?
         client.say(channel: data.channel, text: message, gif: 'welcome')

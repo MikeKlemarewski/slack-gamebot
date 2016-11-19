@@ -3,7 +3,7 @@ module SlackGamebot
     def initialize(attrs = {})
       attrs = attrs.dup
       attrs[:aliases] = ([attrs[:team].game.name] + [attrs[:team].aliases]).flatten.compact
-      attrs[:send_gifs] = attrs[:team].gifs
+      attrs[:send_gifs] = false
       super attrs
     end
 

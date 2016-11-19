@@ -42,15 +42,7 @@ module SlackGamebot
         end
 
         def set_gifs(client, data, user, v)
-          fail SlackGamebot::Error, "You're not a captain, sorry." unless v.nil? || user.captain?
-          unless v.nil?
-            premium client, data do
-              client.owner.update_attributes!(gifs: v.to_b)
-              client.send_gifs = client.owner.gifs
-            end
-          end
-          client.say(channel: data.channel, text: "GIFs for team #{client.owner.name} are #{client.owner.gifs? ? 'on!' : 'off.'}", gif: 'fun')
-          logger.info "SET: #{client.owner} - #{user.user_name} GIFs are #{client.owner.gifs? ? 'on' : 'off'}"
+          client.say(channel: data.channel, text: "gifs have been disabled")
         end
 
         def unset_gifs(client, data, user)

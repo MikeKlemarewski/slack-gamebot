@@ -6,10 +6,8 @@ module SlackGamebot
         expression = match['expression'] if match['expression']
         arguments = expression.split.reject(&:blank?) if expression
 
-        scores = nil
         opponents = []
         teammates = [challenger]
-        multi_player = expression && expression.include?(' with ')
 
         current = :scores
         while arguments && arguments.any?
@@ -17,42 +15,20 @@ module SlackGamebot
           case argument
           when 'to' then
             current = :opponents
-          when 'with' then
-            current = :teammates
           else
             if current == :opponents
               opponents << ::User.find_by_slack_mention!(client.owner, argument)
-              current = :scores unless multi_player
-            elsif current == :teammates
-              teammates << ::User.find_by_slack_mention!(client.owner, argument)
-              current = :scores if opponents.count == teammates.count
-            else
-              scores ||= []
-              scores << Score.check(argument)
             end
           end
         end
 
-        challenge = ::Challenge.find_by_user(client.owner, data.channel, challenger, [ChallengeState::PROPOSED, ChallengeState::ACCEPTED])
 
-        if opponents.any? && (challenge.nil? || (challenge.challengers != opponents && challenge.challenged != opponents))
-          match = ::Match.lose!(team: client.owner, winners: opponents, losers: teammates, scores: scores)
+        if opponents.any?
+          match = ::Match.lose!(team: client.owner, winners: opponents, losers: teammates)
           client.say(channel: data.channel, text: "Match has been recorded! #{match}.", gif: 'loser')
           logger.info "LOST TO: #{client.owner} - #{match}"
-        elsif challenge
-          challenge.lose!(challenger, scores)
-          client.say(channel: data.channel, text: "Match has been recorded! #{challenge.match}.", gif: 'loser')
-          logger.info "LOST: #{client.owner} - #{challenge}"
         else
-          match = ::Match.where(loser_ids: challenger.id).desc(:_id).first
-          if match
-            match.update_attributes!(scores: scores)
-            client.say(channel: data.channel, text: "Match scores have been updated! #{match}.", gif: 'score')
-            logger.info "SCORED: #{client.owner} - #{match}"
-          else
-            client.say(channel: data.channel, text: 'No challenge to lose!')
-            logger.info "LOST: #{client.owner} - #{data.user}, N/A"
-          end
+          client.say(channel: data.channel, text: "Who did you lose to?")
         end
       end
     end

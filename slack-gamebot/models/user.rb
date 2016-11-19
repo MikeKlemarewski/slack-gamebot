@@ -5,6 +5,7 @@ class User
   field :user_id, type: String
   field :user_name, type: String
   field :wins, type: Integer, default: 0
+  field :credit, type: Integer, default: 0
   field :losses, type: Integer, default: 0
   field :losing_streak, type: Integer, default: 0
   field :winning_streak, type: Integer, default: 0
@@ -52,7 +53,7 @@ class User
   end
 
   def self.find_by_slack_mention!(team, user_name)
-    slack_id = slack_mention?(user_name)
+    slack_id = user_name
     user = if slack_id
              User.where(user_id: slack_id, team: team).first
            else
@@ -69,10 +70,9 @@ class User
 
   # Find an existing record, update the username if necessary, otherwise create a user record.
   def self.find_create_or_update_by_slack_id!(client, slack_id)
+    puts "Searching"
     instance = User.where(team: client.owner, user_id: slack_id).first
-    instance_info = Hashie::Mash.new(client.web_client.users_info(user: slack_id)).user
-    instance.update_attributes!(user_name: instance_info.name) if instance && instance.user_name != instance_info.name
-    instance ||= User.create!(team: client.owner, user_id: slack_id, user_name: instance_info.name)
+    instance ||= User.create!(team: client.owner, user_id: slack_id, user_name: slack_id)
     instance.promote! unless instance.captain? || client.owner.captains.count > 0
     instance
   end
