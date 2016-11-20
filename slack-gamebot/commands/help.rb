@@ -17,10 +17,16 @@ Games
 -----
 lost to <opponent>: record your loss
 defeated <opponent>: record your victory
+beat <opponent>: record your victory
 
 Stats
 -----
 leaderboard : show the leaderboard
+
+Credit
+------
+balance: display your credit balance
+spend <0.50>: spend credit
 
 Captains
 --------
