@@ -17,7 +17,7 @@ module SlackGamebot
             current = :opponents
           else
             if current == :opponents
-              opponents << ::User.find_by_slack_mention!(client.owner, argument)
+              opponents << ::User.find_by_slack_mention!(client.owner, argument.capitalize!)
             end
           end
         end

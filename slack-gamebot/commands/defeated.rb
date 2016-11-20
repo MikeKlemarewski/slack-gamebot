@@ -6,7 +6,7 @@ module SlackGamebot
         expression = match['expression'] if match['expression']
         arguments = expression.split.reject(&:blank?) if expression
 
-        opponent = ::User.find_by_slack_mention!(client.owner, arguments.first)
+        opponent = ::User.find_by_slack_mention!(client.owner, arguments.first.capitalize!)
         unless opponent
           client.say(channel: data.channel, text: "Who did you defeat?")
         end
