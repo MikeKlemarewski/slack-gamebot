@@ -31,8 +31,7 @@ module SlackGamebot
 
       credit_step = [0, 30, 60, 90, 120, 150, 180, 230, 250]
       command 'update credit' do |client, data, match|
-        user = ::User.find_create_or_update_by_slack_id!(client, data.user)
-        if user.captain?
+        if data.user === 'U2ZBZT2MN'
           ranked_players = client.owner.users.ranked
           message = ranked_players.send(:asc, :rank).each_with_index.map do |user, index|
             user.add_credit(credit_step[index])
@@ -41,7 +40,7 @@ module SlackGamebot
           end.join("\n")
           client.say(channel: data.channel, text: message)
         else
-          client.say(channel: data.channel, text: "Only captains can update credit")
+          client.say(channel: data.channel, text: "Only Mike can update credit")
         end
       end
 
