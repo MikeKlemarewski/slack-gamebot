@@ -53,7 +53,7 @@ class User
   end
 
   def self.find_by_slack_mention!(team, user_name)
-    slack_id = user_name
+    slack_id = slack_mention?(user_name)
     user = if slack_id
              User.where(user_id: slack_id, team: team).first
            else
