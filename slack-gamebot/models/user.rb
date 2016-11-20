@@ -101,7 +101,7 @@ class User
     lls_s = "lls: #{losing_streak}" if losing_streak > winning_streak && losing_streak >= 3
     formatted_credit = '%.2f' % [credit.to_f/100]
     credit = "$#{formatted_credit}"
-    "#{display_name}: #{[wins_s, losses_s, ties_s].compact.join(', ')} (#{[elo_s, lws_s, lls_s, credit].compact.join(', ')})"
+    "#{display_name}: #{[wins_s, losses_s, ties_s].compact.join(', ')} #{[elo_s, lws_s, lls_s].compact.join(', ')} credit: $#{formatted_credit}"
   end
 
   def team_elo
