@@ -183,4 +183,10 @@ class User
     update_attributes!(credit: self.credit+amount)
     self.credit
   end
+
+  def spend_credit(amount)
+    update_attributes!(credit: self.credit-amount)
+    self.credit
+  end
+
 end
