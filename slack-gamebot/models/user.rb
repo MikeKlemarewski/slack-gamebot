@@ -176,4 +176,9 @@ class User
     return users unless ranks.min && ranks.max
     where(team: team, :rank.gte => ranks.min, :rank.lte => ranks.max).asc(:rank).asc(:wins).asc(:ties)
   end
+
+  def add_credit(amount)
+    update_attributes!(credit: self.credit+amount)
+    self.credit
+  end
 end
