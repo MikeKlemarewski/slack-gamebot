@@ -1,12 +1,12 @@
 module SlackGamebot
   module Commands
-    class Defeated < SlackRubyBot::Commands::Base
-      def self.call(client, data, match)
+    class Beat < SlackRubyBot::Commands::Base
+      command 'beat', 'Beat', 'defeated', 'Defeated', 'humiliated', 'was victorious over' do |client, data, match|
         challenger = ::User.find_create_or_update_by_slack_id!(client, data.user)
         expression = match['expression'] if match['expression']
         arguments = expression.split.reject(&:blank?) if expression
 
-        opponent = ::User.find_by_slack_mention!(client.owner, arguments.first.capitalize!)
+        opponent = ::User.find_by_slack_mention!(client.owner, arguments.first)
         unless opponent
           client.say(channel: data.channel, text: "Who did you defeat?")
         end
