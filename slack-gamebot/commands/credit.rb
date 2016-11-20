@@ -35,7 +35,9 @@ module SlackGamebot
           ranked_players = client.owner.users.ranked
           message = ranked_players.send(:asc, :rank).each_with_index.map do |user, index|
             user.add_credit(credit_step[index])
+            user.record_elo()
             
+            p user.historic_elo
             "#{user.rank}. #{user}"
           end.join("\n")
           client.say(channel: data.channel, text: message)

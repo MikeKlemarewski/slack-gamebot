@@ -12,6 +12,7 @@ class User
   field :ties, type: Integer, default: 0
   field :elo, type: Integer, default: 0
   field :elo_history, type: Array, default: []
+  field :historic_elo, type: Array, default: []
   field :tau, type: Float, default: 0
   field :rank, type: Integer
   field :captain, type: Boolean, default: false
@@ -187,6 +188,14 @@ class User
   def spend_credit(amount)
     update_attributes!(credit: self.credit-amount)
     self.credit
+  end
+
+  def record_elo()
+    self.update_attributes!(historic_elo: historic_elo.push(self.elo))
+  end
+
+  def average_elo()
+    historic_elo.inject(0){|sum, x| sum + x} / historic_elo.length
   end
 
 end
