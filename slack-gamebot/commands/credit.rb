@@ -32,9 +32,19 @@ module SlackGamebot
       credit_step = [0, 30, 60, 90, 120, 150, 180, 230, 250]
       command 'update credit' do |client, data, match|
         if data.user === 'U2ZBZT2MN'
+          last_elo = nil
+          last_credit = nil
+
           ranked_players = client.owner.users.ranked
           message = ranked_players.send(:asc, :rank).each_with_index.map do |user, index|
-            user.add_credit(credit_step[index])
+            if user.elo === last_elo
+              # If tied with the last player, they get the same credit
+              user.add_credit(last_credit)
+            else
+              user.add_credit(credit_step[index])
+              last_credit = credit_step[index]
+              last_elo = user.elo
+            end
             user.record_elo()
             
             "#{user.rank}. #{user}"
