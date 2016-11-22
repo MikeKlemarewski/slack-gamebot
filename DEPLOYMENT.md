@@ -8,7 +8,7 @@ Before deploying, consider using and sponsoring [a free game bot service](https:
 
 ## Deploy Your Own Slack-Gamebot
 
-[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/dblock/slack-gamebot)
+[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/MikeKlemarewski/slack-gamebot)
 
 ### MongoDB
 
