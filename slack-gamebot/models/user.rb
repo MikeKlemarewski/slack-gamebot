@@ -186,6 +186,10 @@ class User
   end
 
   def spend_credit(amount)
+    new_balance = self.credit - amount
+    if new_balance < 0
+      return false
+    end
     update_attributes!(credit: self.credit-amount)
     self.credit
   end

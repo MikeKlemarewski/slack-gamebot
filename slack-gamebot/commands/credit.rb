@@ -19,8 +19,11 @@ module SlackGamebot
 
           spent_credit = arguments.first.delete('$ ,').to_f * 100
           unless spent_credit < 0
-            user.spend_credit(spent_credit)
-            message = "Money well spent, #{user.user_name}! Your new balance is $#{Credit.format_credit(user.credit)}"
+            if !user.spend_credit(spent_credit):
+              message = "You can't spend more credit than you have."
+            else
+              message = "Money well spent, #{user.user_name}! Your new balance is $#{Credit.format_credit(user.credit)}"
+            end
             client.say(channel: data.channel, text: message)
           else
             client.say(channel: data.channel, text: "You can't spend negative credit...you sneaky dog")
