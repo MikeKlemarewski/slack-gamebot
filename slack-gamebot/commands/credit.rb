@@ -32,7 +32,7 @@ module SlackGamebot
         logger.info "SPEND: #{client.owner} - #{data.user}"
       end
 
-      credit_step = [0, 30, 60, 90, 120, 150, 180, 230, 250]
+      credit_step = [0, 30, 60, 90, 120, 150, 180, 210, 225, 250]
       command 'update credit' do |client, data, match|
         if data.user === 'U2ZBZT2MN'
           last_elo = nil
